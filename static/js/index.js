@@ -6,7 +6,7 @@ $(document).ready(function () {
   canvas.height = window.innerHeight;
 
   const background = new Image();
-  background.src = "/static/image/image.png"; // 배경 이미지 경로
+  background.src = "/static/image/dorm.png"; // 배경 이미지 경로
 
   const walkFront = Array.from(
     { length: 6 },
@@ -31,8 +31,13 @@ $(document).ready(function () {
   const charX = canvas.width / 2;
   const charY = canvas.height / 2;
 
-  let bgX = 0;
-  let bgY = 0;
+  // !! 보여주고 싶은 맵 위치 (절대좌표 기준)
+  const initialMapX = 105;
+  const initialMapY = 130;
+
+  // !! 화면 중심에서 그 지점이 보이도록 배경 위치 초기화
+  let bgX = canvas.width / 2 - initialMapX;
+  let bgY = canvas.height / 2 - initialMapY;
 
   const speed = 3;
   let keys = {};
@@ -41,19 +46,31 @@ $(document).ready(function () {
   let currentDirection = "front";
 
   const walls = [
-    { x: -167, y: 10, width: 300, height: 250 },
-    { x: 280, y: 10, width: 300, height: 250 },
+    { x: -40, y: 10, width: 50, height: 158 }, // 왼쪽 벽
+    { x: 125, y: 10, width: 50, height: 158 }, // 오른쪽 벽
+    { x: 0, y: 0, width: 130, height: 50 }, // 창문
+    { x: 0, y: 170, width: 130, height: 10 }, // 바닥
+    { x: 49, y: 128, width: 38, height: 42 }, // 코너
+    { x: 49, y: 50, width: 38, height: 37 }, // 서랍
   ];
 
   function isBlocked(nextBgX, nextBgY) {
     const charXonMap = -nextBgX + canvas.width / 2;
     const charYonMap = -nextBgY + canvas.height / 2;
 
+    const charHalfWidth = 16; // 캐릭터 충돌용 너비 (좁게)
+    const charHalfHeight = 16; // 캐릭터 충돌용 높이 (발 기준)
+
     for (let wall of walls) {
+      // 충돌 시
       const inX =
-        charXonMap + 32 > wall.x && charXonMap - 32 < wall.x + wall.width;
+        charXonMap + charHalfWidth > wall.x &&
+        charXonMap - charHalfWidth < wall.x + wall.width;
+
       const inY =
-        charYonMap + 32 > wall.y && charYonMap - 32 < wall.y + wall.height;
+        charYonMap + charHalfHeight > wall.y &&
+        charYonMap - charHalfHeight < wall.y + wall.height;
+
       if (inX && inY) return true;
     }
     return false;
@@ -111,7 +128,7 @@ $(document).ready(function () {
     ctx.drawImage(background, bgX, bgY);
     ctx.drawImage(character, charX - 32, charY - 32, 64, 64);
 
-    // 벽 시각화
+    //벽 시각화
     for (let wall of walls) {
       ctx.fillStyle = "rgba(255, 0, 0, 0.4)";
       ctx.fillRect(wall.x + bgX, wall.y + bgY, wall.width, wall.height);
