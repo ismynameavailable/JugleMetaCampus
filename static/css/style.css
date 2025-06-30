@@ -1,3 +1,17 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 스크롤 없애기 */
+  height: 100%;
+  width: 100%;
+}
+
+canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
 .map {
   background-color: #d9d9df;
   border: solid 3px #00ce75;

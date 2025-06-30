@@ -50,13 +50,13 @@
 
   <body class="d-flex align-items-center justify-content-center">
     <div class="game-wrapper">
-      <form class="login-form">
+      <form class="login-form" id="login-form" action="/join" method="POST">
         <h2 style="color: #00ce75">KRAFTON</h2>
         <h2>정글 메타캠퍼스</h2>
         <div class="form-group">
-          <input type="text" id="nick" placeholder="닉네임" />
+          <input type="text" id="nick" name="nick" placeholder="닉네임" />
           <div class="pw-group">
-            <input type="password" id="passwd" placeholder="비밀번호" />
+            <input type="password" id="pw" name="pw" placeholder="비밀번호" />
             <i class="fa fa-eye fa-lg"></i>
           </div>
           <p class="fs-1">* 가입이력이 없으면 자동으로 회원가입 됩니다.</p>
