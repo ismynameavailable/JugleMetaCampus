@@ -146,10 +146,22 @@ canvas {
   width: 30px;
   height: 30px;
 }
-
 .item-img {
-  width: 30px;
-  height: 60px;
+  width: 60px;
+  text-align: center;
+  min-height: 60px;
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+}
+.item-img img {
+  min-width: 30px;
+  min-height: 30px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 table,
@@ -182,10 +194,10 @@ td {
   box-sizing: border-box;
   overflow: hidden;
   height: 83px;
+  position: relative;
 }
-.items td div {
-  height: 100%;
-  width: 50%;
+td span {
+  float: left;
 }
 
 /* 인벤토리 끝 */
