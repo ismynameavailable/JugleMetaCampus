@@ -5,6 +5,7 @@ body {
   overflow: hidden; /* 스크롤 없애기 */
   height: 100%;
   width: 100%;
+  background-color: rgb(189, 189, 189);
 }
 
 * {
@@ -18,16 +19,29 @@ canvas {
   width: 100vw;
   height: 100vh;
 }
-.map {
+.quest {
   background-color: #d9d9df;
   border: solid 3px #00ce75;
+  border-radius: 10px;
   position: fixed;
   top: 0;
   left: 0;
   width: 250px;
-  height: 250px;
+  height: 100px;
+  margin-top: 30px;
+  margin-left: 30px;
 }
 
+.quest #quest-title {
+  font-size: 30px;
+  margin: 0 0 5px 10px;
+}
+
+.quest #quest-content {
+  font-size: 20px;
+  margin: 0 0 10px 10px;
+}
+/* 
 .chatting {
   position: fixed;
   bottom: 0;
@@ -57,7 +71,7 @@ canvas {
   padding: 10px 15px;
   flex: 1;
   outline: none;
-}
+} */
 
 /* 프로필 시작 */
 
@@ -72,23 +86,32 @@ canvas {
   border-radius: 10px;
 }
 
-.profile div:first-child {
+.krafton-logo {
+  color: #00ce75;
+  font-size: 30px;
+  text-align: center;
+  height: 30px;
+}
+
+.profile-img {
   width: 80%;
   height: 50%;
-  margin: 30px auto;
+  margin: 5px auto;
   margin-bottom: 10px;
-  background-color: #d9d9df;
+  background-color: #f0f0f0;
   border: solid 3px #00ce75;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .profile-info {
   width: 80%;
   height: 20%;
-  margin: 20px auto;
-  background-color: #d9d9df;
+  margin: 5px auto;
+  background-color: #ffffff;
   border: solid 3px #00ce75;
   border-radius: 10px;
+  text-align: center;
 }
 
 /* 프로필 끝 */
@@ -106,6 +129,11 @@ canvas {
 .coin {
   top: 50%;
   left: 50%;
+  display: flex;
+}
+
+.coin #money {
+  margin: auto;
 }
 
 img {
