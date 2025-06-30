@@ -19,6 +19,11 @@ canvas {
   width: 100vw;
   height: 100vh;
 }
+
+#gameCanvas {
+  position: fixed;
+  z-index: 9999; /* 가장 위로 올려보자 */
+}
 .quest {
   background-color: #ffffff;
   border: solid 3px #00ce75;
@@ -142,6 +147,15 @@ img {
   height: 30px;
 }
 
+.item-img {
+  width: 30px;
+  height: 60px;
+}
+.item-img img {
+  width: 100%;
+  height: 100%;
+}
+
 table,
 tr,
 td {
@@ -157,6 +171,7 @@ table {
   height: 250px;
   border-spacing: 10px;
   background-color: #ffffff;
+  table-layout: fixed;
 }
 
 tr:first-child td {
@@ -170,6 +185,8 @@ td {
   vertical-align: top;
   padding-left: 5px;
   box-sizing: border-box;
+  overflow: hidden;
+  /* height: 60px; */
 }
 
 /* 인벤토리 끝 */
