@@ -78,17 +78,22 @@
               </div>
             </td>
           </tr>
-          <tr>
+          <tr class="items">
             <td id="item-1">
-              1
-              <!-- <div class="item-img">
+              <div>1</div>
+              <div>
                 <img src="../static/image/Water.png" alt="water" />
-              </div> -->
+              </div>
             </td>
-            <td id="item-2">2</td>
+            <td id="item-2">
+              2
+              <div>
+                <img src="../static/image/Pretzel.png" alt="pretzel" />
+              </div>
+            </td>
             <td id="item-3">3</td>
           </tr>
-          <tr>
+          <tr class="items">
             <td id="item-4">4</td>
             <td id="item-5">5</td>
             <td id="item-6">6</td>
@@ -100,6 +105,24 @@
           <img src="../static/image/setting.png" />
         </button>
       </div>
+    </div>
+    <div
+      id="zone-options"
+      style="
+        position: absolute;
+        bottom: 100px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        display: none;
+        z-index: 10;
+      "
+    >
+      <div id="zone-title" style="margin-bottom: 8px"></div>
+      <button onclick="changeMap('cafe')">1. 카페로 이동</button>
+      <button onclick="changeMap('dorm')">2. 기숙사로 이동</button>
     </div>
     <script src="../static/js/map.js"></script>
     <script src="../static/js/character.js"></script>

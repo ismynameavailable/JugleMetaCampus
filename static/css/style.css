@@ -124,11 +124,10 @@ canvas {
 /* 인벤토리 시작 */
 .inventory {
   position: fixed;
-  bottom: -18%;
-  right: 0%;
-  transform: translateY(-50%);
+  bottom: 0;
+  right: 0;
   width: 300px;
-  height: 260px;
+  height: 250px;
   border-radius: 10px;
 }
 
@@ -142,7 +141,8 @@ canvas {
   margin: auto;
 }
 
-img {
+.coin img,
+.setting img {
   width: 30px;
   height: 30px;
 }
@@ -150,10 +150,6 @@ img {
 .item-img {
   width: 30px;
   height: 60px;
-}
-.item-img img {
-  width: 100%;
-  height: 100%;
 }
 
 table,
@@ -166,7 +162,6 @@ td {
 
 table {
   margin: auto;
-  margin-bottom: 30px;
   width: 300px;
   height: 250px;
   border-spacing: 10px;
@@ -186,7 +181,11 @@ td {
   padding-left: 5px;
   box-sizing: border-box;
   overflow: hidden;
-  /* height: 60px; */
+  height: 83px;
+}
+.items td div {
+  height: 100%;
+  width: 50%;
 }
 
 /* 인벤토리 끝 */

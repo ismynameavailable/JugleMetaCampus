@@ -20,27 +20,32 @@ function initEventListeners() {
   });
 }
 function loadCharacterImages() {
-  walkFront = Array.from(
-    { length: 6 },
-    (_, i) => `/static/assets/hero-walk-front/hero-walk-front-${i + 1}.png`
-  );
-  walkBack = Array.from(
-    { length: 6 },
-    (_, i) => `/static/assets/hero-walk-back/hero-walk-back-${i + 1}.png`
-  );
-  walkRight = Array.from(
-    { length: 6 },
-    (_, i) => `/static/assets/hero-walk-right/hero-walk-right-${i + 1}.png`
-  );
-  walkLeft = Array.from(
-    { length: 6 },
-    (_, i) => `/static/assets/hero-walk-left/hero-walk-left-${i + 1}.png`
-  );
+  walkFront = Array.from({ length: 6 }, (_, i) => {
+    const img = new Image();
+    img.src = `/static/assets/hero-walk-front/hero-walk-front-${i + 1}.png`;
+    return img;
+  });
+  walkBack = Array.from({ length: 6 }, (_, i) => {
+    const img = new Image();
+    img.src = `/static/assets/hero-walk-back/hero-walk-back-${i + 1}.png`;
+    return img;
+  });
+  walkRight = Array.from({ length: 6 }, (_, i) => {
+    const img = new Image();
+    img.src = `/static/assets/hero-walk-right/hero-walk-right-${i + 1}.png`;
+    return img;
+  });
+  walkLeft = Array.from({ length: 6 }, (_, i) => {
+    const img = new Image();
+    img.src = `/static/assets/hero-walk-left/hero-walk-left-${i + 1}.png`;
+    return img;
+  });
 
-  character.src = walkFront[0];
+  character = walkFront[0]; // 초기 이미지
 }
 
 function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   let nextBgX = bgX;
   let nextBgY = bgY;
 
@@ -75,16 +80,46 @@ function draw() {
     frame = 0;
   }
 
-  character.src = {
+  const directionMap = {
     front: walkFront,
     back: walkBack,
     left: walkLeft,
     right: walkRight,
-  }[currentDirection][frame];
+  };
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const currentWalkArray = directionMap[currentDirection];
+  character = currentWalkArray[frame];
+
+  const zone = checkZoneProximity();
+  if (zone) {
+    zone.options.forEach((opt, idx) => {
+      ctx.fillText(opt, 30, canvas.height - 40 + idx * 20);
+    });
+  }
+
   ctx.drawImage(background, bgX, bgY);
   ctx.drawImage(character, charX - 32, charY - 32, 64, 64);
 
+  mapChangeZones.forEach((zone) => {
+    ctx.strokeStyle = "red"; // 선 색깔 빨간색
+    ctx.lineWidth = 2; // 선 굵기
+    ctx.strokeRect(
+      zone.x + bgX, // bgX, bgY 적용해야 실제 맵 위치랑 맞음
+      zone.y + bgY,
+      zone.width,
+      zone.height
+    );
+  });
+
+  const optionBox = document.getElementById("zone-options");
+
+  if (zone) {
+    optionBox.style.display = "block";
+    document.getElementById(
+      "zone-title"
+    ).innerText = `${zone.name} 근처입니다.`;
+  } else {
+    optionBox.style.display = "none";
+  }
   requestAnimationFrame(draw);
 }
