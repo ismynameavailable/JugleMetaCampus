@@ -13,4 +13,23 @@ $(document).ready(function () {
         .attr("type", "password");
     }
   });
+  $("#login-form").submit(function(e){
+    e.preventDefault();
+
+    const nick = $("#nick").val();
+    const pw = $("#pw").val();
+
+    $.ajax({
+      type: "POST",
+      url: "/join",
+      data: { nick:nick, pw:pw },
+      success: function(response) {
+        if (response.result === "success") {
+          window.location.href = "/index";
+        } else {
+          alert(response.err);
+        }
+      }
+    })
+  })
 });
