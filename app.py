@@ -4,7 +4,7 @@ import hashlib
 from pymongo import MongoClient
 
 
-uri = "mongodb+srv://khj:3DPYt5G4XljgvZlP@khj.wl2suic.mongodb.net/?retryWrites=true&w=majority&appName=khj&tlsAllowInvalidCertificates=true"
+uri = "mongodb+srv://<아이디>:<비밀번호>@<cluster>.<unique>.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&tlsAllowInvalidCertificates=true"
 client = MongoClient(uri, 27017)
 db = client.dbjungle  # 'dbjungle'라는 이름의 db를 만듭니다.
 
