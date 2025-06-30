@@ -1,0 +1,149 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 스크롤 없애기 */
+  height: 100%;
+  width: 100%;
+}
+
+canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+.map {
+  background-color: #d9d9df;
+  border: solid 3px #00ce75;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 250px;
+}
+
+.chatting {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 600px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  background-color: #d9d9df;
+  border: solid 3px #00ce75;
+}
+
+.chatting div:first-child {
+  height: 85%;
+  color: white;
+  padding: 10px 15px;
+}
+
+.chatting div:nth-child(2) {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.chatting input {
+  background-color: gainsboro;
+  border: none;
+  padding: 10px 15px;
+  flex: 1;
+  outline: none;
+}
+
+/* 프로필 시작 */
+
+.profile {
+  position: fixed;
+  bottom: 270px;
+  right: 0;
+  background-color: rgb(255, 255, 255);
+  width: 200px;
+  height: 250px;
+  border: solid 3px #00ce75;
+  border-radius: 10px;
+}
+
+.profile div:first-child {
+  width: 80%;
+  height: 50%;
+  margin: 30px auto;
+  margin-bottom: 10px;
+  background-color: #d9d9df;
+  border: solid 3px #00ce75;
+  border-radius: 10px;
+}
+
+.profile-info {
+  width: 80%;
+  height: 20%;
+  margin: 20px auto;
+  background-color: #d9d9df;
+  border: solid 3px #00ce75;
+  border-radius: 10px;
+}
+
+/* 프로필 끝 */
+
+/* 인벤토리 시작 */
+.inventory {
+  position: fixed;
+  bottom: -18%;
+  right: 0%;
+  transform: translateY(-50%);
+  width: 300px;
+  height: 260px;
+}
+
+.coin {
+  top: 50%;
+  left: 50%;
+}
+
+img {
+  width: 30px;
+  height: 30px;
+}
+
+table,
+tr,
+td {
+  border: solid 3px #00ce75;
+  border-collapse: separate;
+  border-radius: 10px;
+}
+
+table {
+  margin: auto;
+  margin-bottom: 30px;
+  width: 300px;
+  height: 250px;
+  border-spacing: 10px;
+  background-color: #ffffff;
+}
+
+tr:first-child td {
+  background-color: #d9d9d9;
+  border: solid 3px #00ce75;
+  height: 30px;
+}
+
+td {
+  background-color: #d9d9df;
+  vertical-align: top;
+  padding-left: 5px;
+  box-sizing: border-box;
+}
+
+/* 인벤토리 끝 */
+
+.setting {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: lightgray;
+}
