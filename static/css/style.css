@@ -20,13 +20,13 @@ canvas {
   height: 100vh;
 }
 .quest {
-  background-color: #d9d9df;
+  background-color: #ffffff;
   border: solid 3px #00ce75;
   border-radius: 10px;
   position: fixed;
   top: 0;
   left: 0;
-  width: 250px;
+  width: 230px;
   height: 100px;
   margin-top: 30px;
   margin-left: 30px;
@@ -96,7 +96,7 @@ canvas {
 .profile-img {
   width: 80%;
   height: 50%;
-  margin: 5px auto;
+  margin: 10px auto;
   margin-bottom: 10px;
   background-color: #f0f0f0;
   border: solid 3px #00ce75;
@@ -124,6 +124,7 @@ canvas {
   transform: translateY(-50%);
   width: 300px;
   height: 260px;
+  border-radius: 10px;
 }
 
 .coin {
@@ -159,13 +160,13 @@ table {
 }
 
 tr:first-child td {
-  background-color: #d9d9d9;
+  background-color: #ffffff;
   border: solid 3px #00ce75;
   height: 30px;
 }
 
 td {
-  background-color: #d9d9df;
+  background-color: #ffffff;
   vertical-align: top;
   padding-left: 5px;
   box-sizing: border-box;
@@ -175,9 +176,14 @@ td {
 
 .setting {
   position: fixed;
-  top: 10px;
+  margin: 10px;
   right: 10px;
-  width: 30px;
-  height: 30px;
-  background-color: lightgray;
+}
+
+.setting button {
+  all: unset; /* 기본 스타일 초기화 */
+  cursor: pointer; /* 마우스 올리면 손 모양 */
+  padding: 0;
+  margin: 0;
+  display: inline-block;
 }
