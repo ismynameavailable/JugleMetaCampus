@@ -4,7 +4,7 @@ import hashlib
 from pymongo import MongoClient
 
 
-uri = "mongodb+srv://<아이디>:<비밀번호>@<cluster>.<unique>.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&tlsAllowInvalidCertificates=true"
+uri = "mongodb+srv://khj:3DPYt5G4XljgvZlP@khj.wl2suic.mongodb.net/?retryWrites=true&w=majority&appName=khj&tlsAllowInvalidCertificates=true"
 client = MongoClient(uri, 27017)
 db = client.dbjungle  # 'dbjungle'라는 이름의 db를 만듭니다.
 
@@ -47,6 +47,19 @@ def loading():
     global game, GameTimer
     #게임 리소스 로드 api
 
+@app.route("/api/quest", methods=["POST"])
+def quest_start():
+    id = int(request.form.get("quest_id"))
+    quest = db.quests.find_one({"_id":id})
+    print("quest id: ",id)
+    if quest:
+        title = quest["title"]
+        description = quest["description"]
+        dialogues = quest["dialogues"]
+        return jsonify({'result':'success', 'id':id, 'title':title, 'description':description, 'dialogues':dialogues})
+    else :
+        return jsonify({'result':'fail'})
+    
 def server_setup():
     csrf = CSRFProtect()
     csrf.init_app(app)
