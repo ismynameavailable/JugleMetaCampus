@@ -47,6 +47,15 @@ def loading():
     global game, GameTimer
     #게임 리소스 로드 api
 
+@app.route("/api/quest", methods=["POST"])
+def quest_start():
+    quest = db.quests.find_one({"_id":0})
+    title = quest["title"]
+    description = quest["description"]
+
+    if (quest["_id"] == 0):
+        return jsonify({'result':'success', 'title':title, 'description':description})
+
 def server_setup():
     csrf = CSRFProtect()
     csrf.init_app(app)
