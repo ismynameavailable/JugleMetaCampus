@@ -133,13 +133,12 @@
       "
     >
       <div id="zone-title" style="margin-bottom: 8px"></div>
-      <button onclick="changeMap('cafe')">1. 카페로 이동</button>
-      <button onclick="changeMap('dorm')">2. 기숙사로 이동</button>
+      <div id="zone-buttons"></div>
     </div>
     <script>
       $(function () {
         initMapState(); // 여기서 단 한 번만 초기화
-        initCanvas(window.currentMap, drawGame); // 기존대로 캔버스 초기화
+        initCanvas(window.currentMap, draw); // 기존대로 캔버스 초기화
       });
     </script>
     <script src="../static/js/map.js"></script>

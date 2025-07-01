@@ -24,22 +24,27 @@ canvas {
   position: fixed;
   z-index: 9999; /* 가장 위로 올려보자 */
 }
+
+#zone-buttons button:hover {
+  background-color: #00ce75;
+  color: black;
+  cursor: pointer;
+}
+
 .quest {
-  background-color: #ffffff;
-  border: solid 3px #00ce75;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
   border-radius: 10px;
   position: fixed;
-  top: 0;
-  left: 0;
   width: 230px;
-  height: 100px;
+  height: 120px;
   margin-top: 30px;
   margin-left: 30px;
 }
 
 .quest #quest-title {
   font-size: 30px;
-  margin: 0 0 5px 10px;
+  margin: 7px 0 3px 10px;
 }
 
 .quest #quest-content {
@@ -150,10 +155,6 @@ canvas {
   width: 60px;
   text-align: center;
   min-height: 60px;
-  /* position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); */
 }
 .item-img img {
   min-width: 30px;
