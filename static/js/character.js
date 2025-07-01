@@ -2,7 +2,7 @@ let character = new Image();
 let walkFront, walkBack, walkRight, walkLeft;
 let charX, charY;
 let keys = {};
-let speed = 5;
+const speed = 5;
 let frame = 0;
 let frameDelay = 0;
 let currentDirection = "front";
@@ -120,20 +120,26 @@ function draw() {
     ctx.drawImage(background, bgX, bgY);
     ctx.drawImage(character, charX - 32, charY - 32, 64, 64);
 
-    // 포탈 영역 시각화
-    (currentMap.portals || []).forEach((zone) => {
-      ctx.strokeStyle = "red";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(zone.x + bgX, zone.y + bgY, zone.width, zone.height);
+    currentMap.npcs.forEach((npc, i) => {
+      const texture = new Image();
+      ctx.drawImage(window.npcImages[i], bgX + npc.x, bgY + npc.y, 32, 32);
     });
 
-    window.walls.forEach((wall) => {
-      ctx.strokeStyle = "yellow";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(wall.x + bgX, wall.y + bgY, wall.width, wall.height);
-    });
+    // //포탈 영역 시각화
+    // (currentMap.portals || []).forEach((zone) => {
+    //   ctx.strokeStyle = "red";
+    //   ctx.lineWidth = 2;
+    //   ctx.strokeRect(zone.x + bgX, zone.y + bgY, zone.width, zone.height);
+    // });
 
-    //  zone proximity 감지
+    // //충돌 범위 시각화
+    // window.walls.forEach((wall) => {
+    //   ctx.strokeStyle = "yellow";
+    //   ctx.lineWidth = 2;
+    //   ctx.strokeRect(wall.x + bgX, wall.y + bgY, wall.width, wall.height);
+    // });
+
+    // ✅ zone proximity 감지
     const zone = checkZoneProximity();
     const optionBox = document.getElementById("zone-options");
     const zoneTitle = document.getElementById("zone-title");
