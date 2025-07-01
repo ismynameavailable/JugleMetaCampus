@@ -6,6 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=no"
     />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Bootstrap과 jQuery 포함 -->
     <link
       rel="stylesheet"
@@ -136,13 +137,11 @@
       <div id="zone-buttons"></div>
     </div>
     <script>
-      $(function () {
-        initMapState(); // 여기서 단 한 번만 초기화
-        initCanvas(window.currentMap, draw); // 기존대로 캔버스 초기화
-      });
+      // $(function () {
+      //   initMapState(); // 여기서 단 한 번만 초기화
+      //   initCanvas(window.currentMap, draw); // 기존대로 캔버스 초기화
+      // });
     </script>
-    <script src="../static/js/map.js"></script>
-    <script src="../static/js/character.js"></script>
     <script src="../static/js/index.js"></script>
   </body>
 </html>
