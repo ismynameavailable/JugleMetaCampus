@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   $(".form-group i").on("click", function () {
     $("input").toggleClass("active");
     if ($("input").hasClass("active")) {
@@ -23,9 +24,12 @@ $(document).ready(function () {
       type: "POST",
       url: "/join",
       data: { nick: nick, pw: pw },
+      headers: {
+        'X-CSRFToken': csrfToken
+      },
       success: function (response) {
         if (response.result === "success") {
-          window.location.href = "/index";
+          window.location.href = "/";
         } else {
           alert(response.err);
         }
