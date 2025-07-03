@@ -5,7 +5,8 @@ body {
   overflow: hidden; /* 스크롤 없애기 */
   height: 100%;
   width: 100%;
-  background-color: rgb(189, 189, 189);
+  background-color: rgb(21, 21, 21);
+  /* background-color: rgb(189, 189, 189); */
 }
 
 #fade-overlay {
@@ -44,51 +45,85 @@ canvas {
 }
 
 .quest {
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
+  background: white;
   border-radius: 10px;
   position: fixed;
   width: 230px;
-  height: 120px;
-  margin-top: 30px;
-  margin-left: 30px;
+  height: 100px;
+  margin-top: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  color: #00a35c;
+  border: solid 3px #00ce75;
 }
 
 .quest #quest-title {
-  font-size: 30px;
+  color: black;
+  font-size: 20px;
   margin: 7px 0 3px 10px;
 }
 
 .quest #quest-content {
-  font-size: 20px;
+  font-size: 15px;
   margin: 0 0 10px 10px;
+  color: #00a35c;
+}
+.show_map {
+  background: white;
+  border-radius: 10px;
+  position: fixed;
+  width: 230px;
+  height: 40px;
+  margin-top: 115px;
+  margin-left: 5px;
+  color: black;
+  border: solid 3px #00ce75;
 }
 
+.show_map #mapName {
+   font-size: 15px;
+  margin: 10px 3px 0px 10px;
+ 
+}
+
+#npc_name {
+  font-size: 20px;
+  margin-top: 15px;
+  margin-left: 15px;
+}
 .dialogue {
   position: fixed;
   margin-left: 30px;
-  background-color: white;
   border: solid 3px #00ce75;
   border-radius: 10px;
   width: 600px;
-  height: 200px;
+  height: 130px;
   position: absolute;
-  top: 70%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  background-color: white;
 }
 
+#continue-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  cursor: pointer;
+}
 .dialogue-content {
   margin: 0 auto;
-  margin-top: 50px;
-  /* background-color: lightskyblue; */
+  margin-top: 2px;
   width: 80%;
-  height: 100px;
+  height: 80%;
+  font-size: 20px;
+  position: relative;
+  color: black;
 }
 
 .dialogue svg {
-  margin-right: 20px;
-  float: right;
+  margin-right: 0;
+  float: none;
 }
 
 .test {
@@ -98,34 +133,56 @@ canvas {
 
 .store {
   position: fixed;
-  top: 450px;
-  right: 500px;
-  width: 200px;
+  /* bottom: 20px; */
+  /* left: 400px; */
+  top: 45%;
+  right: 25%;
+  width: 180px;
   height: 200px;
-  background-color: lightskyblue;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  text-align: right;
+}
+
+#item-list {
+  width: 150px;
+  height: 70%;
+  margin: 20px 20px 0px; /* 위 좌+우 아래*/
+  /* background-color: yellow; */
 }
 
 .store ul {
   list-style: none;
-  background-color: white;
-  width: 150px;
+  width: 90%;
+  height: 25px;
+  margin: 2px 0px;
+  padding: 0;
+
 }
-.store li {
+
+.store ul li {
   float: left;
   width: 50%;
-  background-color: lightgrey;
+  height: 100%;
+  color: white;
+  /* background-color: lightgrey; */
+  font-size: 18px;
 }
 
 ul li:first-child {
-  background-color: #00ce75;
+  /* background-color: #00ce75; */
+  text-align: left  ;
 }
 
-/* .selected {
-  
-} */
+.selected {
+  outline: solid 3px rgb(255, 255, 255);
+}
  
 .store button {
-  float: right;
+  display: inline-block;
+}
+.store button:last-child {
+  margin-right: 10px;
 }
 
 .chatting {
@@ -136,8 +193,9 @@ ul li:first-child {
   height: 130px;
   display: flex;
   flex-direction: column;
-  background-color: #d9d9df;
-  border: solid 3px #00ce75;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  
 }
 
 .chatting div:first-child {
@@ -145,7 +203,7 @@ ul li:first-child {
   flex-direction: column-reverse;
   overflow: auto;
   height: 100%;
-  color: black;
+  color: white;
 }
 
 .chatting div:nth-child(2) {
@@ -158,9 +216,9 @@ ul li:first-child {
 }
 
 .chatting input {
-  background-color: gainsboro;
+  background-color: rgb(235, 235, 235);
   border: none;
-  padding: 5px 15px;
+  padding: 0px 15px;
   flex: 1;
   outline: none;
 }
@@ -206,8 +264,6 @@ ul li:first-child {
   text-align: center;
   font-size: 12px;
 }
-
-/* 프로필 끝 */
 
 /* 인벤토리 시작 */
 .inventory {

@@ -1,33 +1,29 @@
 from flask import Flask, render_template, request, jsonify, session, redirect
 from flask_wtf.csrf import CSRFProtect
-import hashlib
-from pymongo import MongoClient
 import threading
 import time
 import gameInfo
 import math
 
-P_SPEED = 10
+P_SPEED = 5
 P_WIDTH = 20
 P_HEIGHT = 35
 
 
-uri = "mongodb+srv://khj:3DPYt5G4XljgvZlP@khj.wl2suic.mongodb.net/?retryWrites=true&w=majority&appName=khj&tlsAllowInvalidCertificates=true"
-client = MongoClient(uri, 27017)
-db = client.metacampus  # 'dbjungle'라는 이름의 db를 만듭니다.
-
-
 game = {}
+gametimer = 0
 chat = []
 
 
 def gamebox():
-    global game
+    global game, gametimer
     while True:
         # print("print")
         for nick in list(game.keys()):
             # print("hello")
             p = game[nick]
+            if (gametimer - p["update"] > 2):
+                continue
 
             if not p["vx"] or not p["vy"]:
                 g = P_SPEED
@@ -55,7 +51,12 @@ def gamebox():
             p["portal"] = gameInfo.nearPortal(
                 p["x"], p["y"], P_WIDTH, P_HEIGHT, p["map"]
             )
+
+            p["npc"] = gameInfo.nearNPC(
+                p["x"], p["y"], p["map"]
+            )
         time.sleep(0.05)
+        gametimer += 1
 
 
 app = Flask(__name__, static_folder="./static")
@@ -82,25 +83,27 @@ def login():
 
 @app.route("/join", methods=["POST"])  # 포스트 메소드 둘다 사용
 def register_or_login():
-    global game
+    global game, gametimer
 
     nick = session.get("nick", None)
     if nick is None:
         nick = request.form.get("nick")
-        password = request.form.get("pw")
+        # password = request.form.get("pw")
 
     if not nick in list(game.keys()): 
         # db없이 닉네임을 그냥 번호로 정하는 테스트코드
         game[nick] = {
             "nick": nick,
-            "map": "dorm_hallway",
-            "x": gameInfo.maps["dorm_hallway"]["loc"][0][0],
-            "y": gameInfo.maps["dorm_hallway"]["loc"][0][1],
+            "map": "floor",
+            "x": gameInfo.maps["floor"]["loc"][0][0],
+            "y": gameInfo.maps["floor"]["loc"][0][1],
             "vx": 0,
             "vy": 0,
             "portal": None,
+            "npc": None,
             "money": 7000,
-            "poket": []
+            "pocket": [],
+            "update": gametimer
         }
         session["nick"] = nick
     return jsonify({"result": "success", "msg": "게임 참가 성공", "nick": nick})
@@ -154,8 +157,9 @@ def loading():
 
 @app.route("/connect", methods=["GET"])
 def connect():
-    global game, chat
+    global game, chat, gametimer
     nick = session.get("nick", None)
+    game[nick]["update"] = gametimer
 
     game[nick]["vx"] = float(request.args.get("vx"))
     game[nick]["vy"] = float(request.args.get("vy"))
@@ -173,14 +177,15 @@ def get_quest(quest_id):
     return None
 
 @app.route("/quest", methods=["POST"])
-def quest_start():
+def quest():
     id = int(request.form.get("quest_id"))
     quest = get_quest(id)
     if quest:
         title = quest["title"]
         description = quest["description"]
         dialogues = quest["dialogue"]
-        return jsonify({'result':'success', 'id':id, 'title':title, 'description':description, 'dialogues':dialogues})
+        sell = quest["sell"]
+        return jsonify({'result':'success', 'id':id, 'title':title, 'description':description, 'dialogues':dialogues, "sell":sell})
     else :
         return jsonify({'result':'fail'})
 
@@ -190,16 +195,52 @@ def send_chat():
     chat.append({"nick": session.get("nick", None), "msg": request.form.get("msg")})
     return jsonify({"result": "success"})
 
-@app.route("/buy", methods=["POST"])
-def buy():
+@app.route("/buy_menu", methods=["POST"])
+def buy_menu():
     loc = request.form.get("loc")
-    print(loc)
     for place in gameInfo.sales_items:
         if (loc == place["location"]):
-            itemList = place["items"]
-            return jsonify({"result": "success", "items": itemList})
+            items = place["items"]
+            return jsonify({"result": "success", "items": items})
     return jsonify({"result": "fail"})
 
+@app.route("/buy_item", methods=["POST"])
+def buy_item():
+    loc = request.form.get("loc")
+    item_id = int(request.form.get("item_id"))
+    items = []
+    nick = session.get("nick", None)
+    print("nick",nick)
+    print("loc", loc)
+    print("id",item_id)
+    if loc is None or item_id is None:
+        return jsonify({"result": "fail"})
+    for place in gameInfo.sales_items:
+        if (loc == place["location"]):
+            items = place["items"]
+            break
+    for item in items:
+        if ((item_id == item["_id"]) and (game[nick]["money"] >= item["price"])):
+            game[nick]["money"] -= item["price"]
+            game[nick]["pocket"].append(item["_id"])
+            return jsonify({"result": "success"})
+    return jsonify({"result": "fail"})
+
+@app.route("/inventory", methods=["POST"])
+def inventory():
+    nick = session.get("nick", None)
+    if nick is None or nick not in game:
+        return jsonify({"result": "fail", "error": "no user"})
+
+    item_ids = game[nick]["pocket"]
+    inventory_items = []
+
+    for place in gameInfo.sales_items:
+        for item in place["items"]:
+            if item["_id"] in item_ids:
+                inventory_items.append(item)
+
+    return jsonify({"result": "success", "inventory": inventory_items})
 
 def server_setup():
     csrf = CSRFProtect()

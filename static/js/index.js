@@ -2,6 +2,7 @@ let map = {"image": new Image, "name": "", "width":1, "height":1};
 let walkFront, walkBack, walkRight, walkLeft;
 let walls, npcs, portals;
 
+
 let keys = {
   "Shift":false
 };
@@ -23,15 +24,31 @@ let errCount=0;
 
 let currentLine = 0;
 let dialogues = [];
+let sell;
 let questId = 0;
 
-let selectedLi = -1;
+let place = "";
+let itemId = -1;
 
+let itemImgs = {
+    0: new Image(),
+    1: new Image(),
+    2: new Image(),
+    3: new Image()
+  };
+  itemImgs[0].src = "/static/image/Water.png";       // 삼다수
+  itemImgs[1].src = "/static/image/Coca.png";        // 코카콜라
+  itemImgs[2].src = "/static/image/Pretzel.png";     // 하겐다즈
+  itemImgs[3].src = "/static/image/Pretzel.png";     // 프레첼
+
+let isPopupShow, isBtnShow;
 $(document).ready(function () {
   csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   initEventListeners();
   $(".dialogue").css("display","none");
-  test();
+  $(".store").css("display","none");
+  // test();
+  // quest_start(0);
 })
 
 function initEventListeners() {
@@ -46,6 +63,8 @@ function initEventListeners() {
 }
 
 function loadResource(target_map="", locNum=-1) {
+
+
   walkFront = Array.from({ length: 6 }, (_, i) => {
     const img = new Image();
     img.src = `/static/assets/hero-walk-front/hero-walk-front-${i + 1}.png`;
@@ -66,6 +85,7 @@ function loadResource(target_map="", locNum=-1) {
     img.src = `/static/assets/hero-walk-left/hero-walk-left-${i + 1}.png`;
     return img;
   });
+  
 
   $.ajax({
     url: '/join',
@@ -76,6 +96,7 @@ function loadResource(target_map="", locNum=-1) {
     },
     data: {},
     success: function (data) {
+      
       nick = data["nick"];
       $("#nickname").text(nick)
       $.ajax({
@@ -98,6 +119,14 @@ function loadResource(target_map="", locNum=-1) {
           map["width"] = data["width"];
           map["height"] = data["height"];
 
+          $("#mapName").text("현재 위치: " + map["name"]);
+          if (map["name"] == "교육동 B1F 편의점") {
+            place = "store";
+          }
+          else if (map["name"] = "교육동 B1F 카페") {
+            place = "cafe";
+          }
+
           console.log(data); // 서버 응답 내용
           initgame();
         },
@@ -105,6 +134,8 @@ function loadResource(target_map="", locNum=-1) {
     }
   });
 }
+
+
 
 let canvas;
 let ctx;
@@ -125,6 +156,7 @@ function initgame() {
   const zoneTitle = document.getElementById("zone-title");
   const zoneButtons = document.getElementById("zone-buttons");
   isBtnShow = false;
+  isPopupShow = false;
   optionBox.style.display = "none";
 
   
@@ -171,11 +203,11 @@ function initgame() {
 
         npcs.forEach((npc, i) => {
           loc = G2L(npc["x"], npc["y"])
-          ctx.drawImage(npc["image"], loc[0], loc[1], 20, 20);
+          ctx.drawImage(npc["image"], loc[0], loc[1], 25, 30);
         });
 
         Object.keys(data["game"]).forEach((key) => {
-          if (data["game"][key]["map"] == map["name"]) {
+          if (data["game"][key]["map"] == data["game"][nick]["map"]) {
             if (walkdir[key] == null) {
               walkdir[key] = "right"
             }
@@ -217,7 +249,7 @@ function initgame() {
         })
 
         if (debug) {
-          //포탈 영역 시각화
+          // 포탈 영역 시각화
           portals.forEach((zone) => {
             ctx.strokeStyle = "red";
             ctx.lineWidth = 2;
@@ -248,7 +280,7 @@ function initgame() {
 
             // 버튼 생성: 현재 맵 이름 제외
             for (const opt of portals[data["game"][nick]["portal"]]["options"]) {
-              if (opt.target !== map["name"]) {
+              if (opt.target !== data["game"][nick]["map"]) {
                 const btn = document.createElement("button");
                 btn.innerText = opt.label;
                 btn.onclick = () => {
@@ -264,6 +296,14 @@ function initgame() {
           if (isBtnShow) {
             isBtnShow = false;
             optionBox.style.display = "none";
+          }
+        }
+        
+        if (data["game"][nick]["npc"] != null) {
+          if (keys[" "] && !isPopupShow) {
+            isPopupShow = true
+            $("#npc_name").text(npcs[data["game"][nick]["npc"]]["name"] + " : ");
+            dialogue(npcs[data["game"][nick]["npc"]]["questNum"]);
           }
         }
       },
@@ -289,7 +329,6 @@ function quest_start(questId) {
     },
     success: function (response) {
       if (response["result"] === "success") {
-        console.log("quest start ");
         console.log(response);
         const { title, description } = response;
         document.getElementById("quest-title").innerHTML = title;
@@ -302,7 +341,11 @@ function quest_start(questId) {
 
 function quest_clear(questId) {
   document.getElementById("dialogue-content").innerHTML = " ";
+  isPopupShow = false
   $(".dialogue").slideToggle(500);
+  if (sell != null) {
+    open_buy_menu(open_buy_menu(sell))
+  }
   questId += 1;
   quest_start(questId); // 다음퀘 실행
 }
@@ -319,10 +362,12 @@ function dialogue(id) {
     success: function (response) {
       if (response["result"] === "success") {
         dialogues = response.dialogues;
+        sell = response.sell;
         questId = id;
         currentLine = 0;
-        $(".dialogue").slideToggle(500)
         dialogue_continue();
+        $(".dialogue").slideToggle(500);
+          document.getElementById("continue-btn").addEventListener("click", dialogue_continue);
 
       }
     }
@@ -333,6 +378,7 @@ function dialogue_continue() {
   if (currentLine < dialogues.length) {
     document.getElementById("dialogue-content").innerHTML = dialogues[currentLine]["text"];
     currentLine++;
+    
   }
   else {
     quest_clear(questId);
@@ -351,23 +397,27 @@ function test() {
   document.getElementById("quest-btn3").addEventListener('click', function () {
     dialogue(3);
   });
-  // quest_start(0);
-  document.getElementById("continue-btn").addEventListener("click", dialogue_continue);
+  document.getElementById("continue-btn").addEventListener("click", function() {
+    dialogue_continue();
+  });
   document.getElementById("loc-store").addEventListener('click', function () {
+    place = "store";
     open_buy_menu("store");
   });
   document.getElementById("loc-cafe").addEventListener('click', function () {
+    place = "cafe";  
     open_buy_menu("cafe");
   });
 }
 
-function open_buy_menu(location) {
-  console.log("store");
+function open_buy_menu(place) {
+  $(".store").css("display","none");
+  $(".store").slideToggle(500);
   $("#item-list").html("");
   $.ajax({
     type: "POST",
-    url: "/buy",
-    data: { loc: location },
+    url: "/buy_menu",
+    data: { loc: place },
     headers: {
       'Accept': 'application/json',
       'X-CSRFToken': csrfToken
@@ -375,26 +425,88 @@ function open_buy_menu(location) {
     success: function (response) {
       if (response["result"] === "success") {
         console.log(response);
-        items = response.items;
+        items = response.items;   
         items.forEach(item => {
           item_name = item["name"];
           item_price = item["price"];
-          temp_html = `<ul><li>${item_name}</li><li>${item_price}원</li></ul>`;
+          item_id = item["_id"]
+          temp_html = `<ul data-item-id="${item_id}"><li>${item_name}</li><li>${item_price}원</li></ul>`;
           $("#item-list").append(temp_html);
-          $("li").on("click", function(){
-            $("li").removeClass("selected");
-            $(this).addClass("selected");
-            selectedLi = $(this).index();
-          });
-          // 버튼 누르면 구매
         });
       }
     }
   });
 }
-// 유저db에 저장? 돈-=
-function buy_item(item_id) {
-  if (selectedLi != -1) {
+  $("#item-list").on("click", "ul", function(){
+    if ($(this).hasClass("selected")) {
+      $(this).removeClass("selected");
+      itemId = -1;
+    }
+    else {
+      $("ul").removeClass("selected");
+      $(this).addClass("selected");
+      itemId = $(this).data("item-id");
+    }
+  });
 
+  // 버튼 누르면 구매
+  $("#buy-btn").on("click", function(){
+    // console.log("df");
+    buy_item(place, itemId);
+  });
+  $("#nobuy-btn").on("click", function(){
+    $(".store").slideToggle(500);
+  });
+function buy_item(place, itemId) {
+  console.log("ss",itemId);
+  if (itemId == -1) {
+    console.log("aa");
+    $(".test").append("id ",itemId);
+    return;
   }
+  $.ajax({
+    type: "POST",
+    url: "/buy_item",
+    data: { loc: place, item_id: itemId },
+    headers: {
+      'Accept': 'application/json',
+      'X-CSRFToken': csrfToken
+    },
+    success: function (response) {
+      if (response["result"] === "success") {
+        console.log(response);
+        inventory_update();
+      }
+    }
+  });
+}
+
+function inventory_update() {
+  $.ajax({
+    type: "POST",
+    url: "/inventory",
+    data: {},
+    headers: {
+      'Accept': 'application/json',
+      'X-CSRFToken': csrfToken
+    },
+    success: function (response) {
+      if (response["result"] === "success") {
+        // console.log(response);
+        const inventory = response.inventory;
+        for (let i=1;i<=6;i++) {
+          $(`#item-${i} .item-img`).html("");
+        }
+        inventory.forEach((item, i) => {
+          const id = item._id;
+          const img = itemImgs[id];
+          console.log("inven",id, img);
+          if (typeof id === 'number' && img) {
+            const imgTag = `<img src="${img.src}"/>`;
+            $(`#item-${i + 1} .item-img`).html(imgTag);
+          }
+        });
+      }
+    }
+  });
 }

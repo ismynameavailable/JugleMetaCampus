@@ -1,186 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=no"
-    />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!-- Bootstrap과 jQuery 포함 -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://code.jquery.com/jquery-3.5.1.min.js"
-      integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
-      crossorigin="anonymous"
-    ></script>
-    <!-- <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"> -->
-    <!-- <script src="{{ url_for('static', filename='js/script.js') }}"></script> -->
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, user-scalable=no"
+  />
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <!-- Bootstrap과 jQuery 포함 -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+    crossorigin="anonymous"
+  />
+  <script
+    src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"
+  ></script>
+  <!-- <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"> -->
+  <!-- <script src="{{ url_for('static', filename='js/script.js') }}"></script> -->
 
-    <link rel="stylesheet" href="../static/css/style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="../static/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
 
-    <!-- 폰트 시작 -->
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Chiron+Sung+HK:ital,wght@0,200..900;1,200..900&family=Do+Hyeon&family=Jua&family=Stylish&display=swap"
-      rel="stylesheet"
-    />
-    <!-- 폰트 끝 -->
+  <!-- 폰트 시작 -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Chiron+Sung+HK:ital,wght@0,200..900;1,200..900&family=Do+Hyeon&family=Jua&family=Stylish&display=swap"
+    rel="stylesheet"
+  />
+  <!-- 폰트 끝 -->
 
-    <title>정글 메타캠퍼스</title>
-  </head>
+  <title>정글 메타캠퍼스</title>
+</head>
 
-  <body>
-    <canvas
-      id="gameCanvas"
-      style="position: fixed; top: 0; left: 0; z-index: 0"
-    ></canvas>
-    <div class="game-wrapper">
-      <!-- <div id="fade-overlay"></div> -->
-      <div class="quest">
-        <div id="quest-title">퀘스트 타이틀</div>
-        <div id="quest-content">퀘스트 내용</div>
-      </div>
-       <div class="dialogue" id="dialogue">
-      <div class="dialogue-content" id="dialogue-content"></div>
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" id="continue-btn"
+<body>
+  <canvas
+    id="gameCanvas"
+    style="position: fixed; top: 0; left: 0; z-index: 0"
+  ></canvas>
+  <div class="game-wrapper">
+    <!-- <div id="fade-overlay"></div> -->
+    <div class="quest">
+      <div id="quest-title">퀘스트 타이틀</div>
+      <div id="quest-content">퀘스트 내용</div>
+    </div>
+    <div class="show_map">
+      <div id="mapName">현재 위치 : </div>
+    </div>
+    <div class="dialogue" id="dialogue">
+    <div id="npc_name"></div>
+    <div class="dialogue-content" id="dialogue-content">
+    </div>
+    <button id="continue-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+        fill="currentColor"
         class="bi bi-caret-right-fill" viewBox="0 0 16 16">
-        <path
-          d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
-      </svg>
-    </div>
-    <div class="test" id="test">
-      <button class="btn btn-primary" id="quest-btn0">대화0</button>
-      <button class="btn btn-primary" id="quest-btn1">대화1</button>
-      <button class="btn btn-primary" id="quest-btn2">대화2</button>
-      <button class="btn btn-primary" id="quest-btn3">대화3</button><br>
-      <button class="btn btn-primary" id="loc-store">편의점</button>
-      <button class="btn btn-primary" id="loc-cafe">카페</button>
-    </div>
-    <div class="store">
-      <div id="item-list"></div>
-      <button class="btn btn-primary" id="buy-btn">구매</button>
-    </div>
-      <div class="chatting">
-        <div>
-          <ul class="chat_list">
-          </ul>
-        </div>
-        <div><input type="text" id="chatting-content" onkeypress="chat(event)"/></div>
+      <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+    </svg>
+      </button>
+</div>
+
+  </div>
+
+  <div class="store">
+    <div id="item-list"></div>
+    <button class="btn btn-primary" id="buy-btn">구매</button>
+    <button class="btn btn-secondary" id="nobuy-btn">취소</button>
+  </div>
+    <div class="chatting">
+      <div>
+        <ul class="chat_list">
+        </ul>
       </div>
-      <div class="profile">
-        <div class="krafton-logo">KRAFTON</div>
-        <div class="profile-img">
-          <img
-            src="../static/assets/hero-walk-front/hero-walk-front-2.png"
-            style="width: 100%; height: 100%"
-          />
-        </div>
-        <div class="profile-info">
-          <div>정글 탐험가</div>
-          <div id="nickname">김땡땡</div>
-        </div>
+      <div><input type="text" id="chatting-content" onkeypress="chat(event)"/></div>
+    </div>
+    <div class="profile">
+      <div class="krafton-logo">KRAFTON</div>
+      <div class="profile-img">
+        <img
+          src="../static/assets/hero-walk-front/hero-walk-front-2.png"
+          style="width: 100%; height: 100%"
+        />
       </div>
-      <div class="inventory">
-        <table>
-          <tr>
-            <td colspan="3">
-              <div class="coin">
-                <!-- <img src="{{ url_for('static', filename='image/coin.png') }}" alt="coin"> -->
-                <img src="../static/image/coin.png" alt="coin" />
-                <p id="money">300원</p>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td id="item-1">
-              <span>1</span>
-              <div class="item-img">
-                <img src="../static/image/Water.png" alt="water" />
-              </div>
-            </td>
-            <td id="item-2">
-              <span>2</span>
-              <div class="item-img">
-                <img src="../static/image/Pretzel.png" alt="pretzel" />
-              </div>
-            </td>
-            <td id="item-3">
-              <span>3</span>
-              <div class="item-img"></div>
-            </td>
-          </tr>
-          <tr>
-            <td id="item-4">
-              <span>4</span>
-              <div class="item-img"></div>
-            </td>
-            <td id="item-5">
-              <span>5</span>
-              <div class="item-img"></div>
-            </td>
-            <td id="item-6">
-              <span>6</span>
-              <div class="item-img"></div>
-            </td>
-          </tr>
-        </table>
-      </div>
-      <div class="setting">
-        <button>
-          <img src="../static/image/setting.png" />
-        </button>
+      <div class="profile-info">
+        <div>정글 탐험가</div>
+        <div id="nickname">닉네임</div>
       </div>
     </div>
-    <div
-      id="zone-options"
-      style="
-        position: absolute;
-        bottom: 100px;
-        left: 20px;
-        background: rgba(0, 0, 0, 0.6);
-        color: white;
-        padding: 10px;
-        border-radius: 8px;
-        display: none;
-        z-index: 10;
-      "
-    >
-      <div id="zone-title" style="margin-bottom: 8px"></div>
-      <div id="zone-buttons"></div>
+    <div class="inventory">
+      <table>
+        <tr>
+          <td colspan="3">
+            <div class="coin">
+              <!-- <img src="{{ url_for('static', filename='image/coin.png') }}" alt="coin"> -->
+              <p id="money"></p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td id="item-1">
+            <span>1</span>
+            <div class="item-img">
+            </div>
+          </td>
+          <td id="item-2">
+            <span>2</span>
+            <div class="item-img">
+            </div>
+          </td>
+          <td id="item-3">
+            <span>3</span>
+            <div class="item-img"></div>
+          </td>
+        </tr>
+        <tr>
+          <td id="item-4">
+            <span>4</span>
+            <div class="item-img"></div>
+          </td>
+          <td id="item-5">
+            <span>5</span>
+            <div class="item-img"></div>
+          </td>
+          <td id="item-6">
+            <span>6</span>
+            <div class="item-img"></div>
+          </td>
+        </tr>
+      </table>
     </div>
-    <script src="../static/js/index.js"></script>
-    <script>
-      function chat (e) {
-        if (e.keyCode == 13 && $('#chatting-content').val() != "") {
-          $.ajax({
-            url: '/chat',
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'X-CSRFToken': csrfToken
-            },
-            data: {"msg": $('#chatting-content').val()},
-            success: function(data) {
-              $('#chatting-content').val("")
-            }
-          })
-          return true;
-        } else {
-          return false;
-        }
+    <!-- <div class="setting">
+      <button>
+        <img src="../static/image/setting.png" />
+      </button>
+    </div> -->
+  </div>
+  <div
+    id="zone-options"
+    style="
+      position: absolute;
+      bottom: 100px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 10px;
+      border-radius: 8px;
+      display: none;
+      z-index: 10;
+    "
+  >
+    <div id="zone-title" style="margin-bottom: 8px"></div>
+    <div id="zone-buttons"></div>
+  </div>
+  <script src="../static/js/index.js"></script>
+  <script>
+    function chat (e) {
+      if (e.keyCode == 13 && $('#chatting-content').val() != "") {
+        $.ajax({
+          url: '/chat',
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'X-CSRFToken': csrfToken
+          },
+          data: {"msg": $('#chatting-content').val()},
+          success: function(data) {
+            $('#chatting-content').val("")
+          }
+        })
+        return true;
+      } else {
+        return false;
       }
-    </script>
-  </body>
+    }
+  </script>
+</body>
 </html>
