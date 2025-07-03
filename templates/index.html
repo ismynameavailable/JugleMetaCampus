@@ -47,14 +47,38 @@
       style="position: fixed; top: 0; left: 0; z-index: 0"
     ></canvas>
     <div class="game-wrapper">
+      <!-- <div id="fade-overlay"></div> -->
       <div class="quest">
         <div id="quest-title">퀘스트 타이틀</div>
         <div id="quest-content">퀘스트 내용</div>
       </div>
-      <!-- <div class="chatting">
-        <div>content</div>
-        <div><input type="text" id="chatting-content" /></div>
-      </div> -->
+       <div class="dialogue" id="dialogue">
+      <div class="dialogue-content" id="dialogue-content"></div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" id="continue-btn"
+        class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+        <path
+          d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+      </svg>
+    </div>
+    <div class="test" id="test">
+      <button class="btn btn-primary" id="quest-btn0">대화0</button>
+      <button class="btn btn-primary" id="quest-btn1">대화1</button>
+      <button class="btn btn-primary" id="quest-btn2">대화2</button>
+      <button class="btn btn-primary" id="quest-btn3">대화3</button><br>
+      <button class="btn btn-primary" id="loc-store">편의점</button>
+      <button class="btn btn-primary" id="loc-cafe">카페</button>
+    </div>
+    <div class="store">
+      <div id="item-list"></div>
+      <button class="btn btn-primary" id="buy-btn">구매</button>
+    </div>
+      <div class="chatting">
+        <div>
+          <ul class="chat_list">
+          </ul>
+        </div>
+        <div><input type="text" id="chatting-content" onkeypress="chat(event)"/></div>
+      </div>
       <div class="profile">
         <div class="krafton-logo">KRAFTON</div>
         <div class="profile-img">
@@ -136,12 +160,27 @@
       <div id="zone-title" style="margin-bottom: 8px"></div>
       <div id="zone-buttons"></div>
     </div>
-    <script>
-      // $(function () {
-      //   initMapState(); // 여기서 단 한 번만 초기화
-      //   initCanvas(window.currentMap, draw); // 기존대로 캔버스 초기화
-      // });
-    </script>
     <script src="../static/js/index.js"></script>
+    <script>
+      function chat (e) {
+        if (e.keyCode == 13 && $('#chatting-content').val() != "") {
+          $.ajax({
+            url: '/chat',
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'X-CSRFToken': csrfToken
+            },
+            data: {"msg": $('#chatting-content').val()},
+            success: function(data) {
+              $('#chatting-content').val("")
+            }
+          })
+          return true;
+        } else {
+          return false;
+        }
+      }
+    </script>
   </body>
 </html>

@@ -2,7 +2,9 @@ maps = {
     "dorm": {
         "name": "dorm",
         "imagePath": "/static/image/dorm.png",
-        "loc": [(105, 130), (30, 130)],
+        "width": 1,
+        "height": 1,
+        "loc": [(105, 130), (30, 130)],  # 숙소 입구 / 화장실 입구
         "walls": [
             {"x": -40, "y": 10, "width": 50, "height": 158},
             {"x": 125, "y": 10, "width": 50, "height": 158},
@@ -13,15 +15,13 @@ maps = {
         ],
         "portals": [
             {
-                "name": "숙소 엘리베이터",
+                "name": "숙소 -> 복도",
                 "x": 90,
-                "y": 160,
+                "y": 150,
                 "width": 30,
                 "height": 10,
                 "options": [
-                    {"label": "1. 카페로 이동", "target": "cafe"},
-                    {"label": "2. 편의점으로 이동", "target": "store"},
-                    {"label": "3. 교육실로 이동", "target": "classroom"},
+                    {"label": "1. 복도로 이동", "target": "dorm_hallway"},
                 ],
             },
             {
@@ -37,9 +37,50 @@ maps = {
         ],
         "npcs": [],
     },
+    "dorm_hallway": {
+        "name": "dorm_hallway",
+        "imagePath": "/static/image/dorm_hallway.png",
+        "width": 1.1,
+        "height": 1.1,
+        "loc": [(815, 95), (1380, 870)],  # 숙소 앞 / 교육동 -> 기숙사 복도
+        "walls": [],
+        "portals": [
+            {
+                "name": "숙소 입구",
+                "x": 800,
+                "y": 25,
+                "width": 20,
+                "height": 10,
+                "options": [
+                    {
+                        "label": "숙소로 이동",
+                        "target": "dorm",
+                        "locNum": 0,
+                    },
+                ],
+            },
+            {
+                "name": "기숙사 로비 -> 교육동 B1",
+                "x": 1350,
+                "y": 920,
+                "width": 60,
+                "height": 10,
+                "options": [
+                    {
+                        "label": "교육동 B1로 이동",
+                        "target": "floor_b1",
+                        "locNum": 4,
+                    },
+                ],
+            },
+        ],
+        "npcs": [],
+    },
     "cafe": {
         "name": "cafe",
         "imagePath": "/static/image/cafe.png",
+        "width": 1,
+        "height": 1,
         "loc": [(105, 180)],
         "walls": [
             {"x": 0, "y": 100, "width": 10, "height": 180},  # 왼쪽 벽
@@ -53,23 +94,27 @@ maps = {
         ],
         "portals": [
             {
-                "name": "카페 엘리베이터",
+                "name": "카페->교육동 B1층 로비",
                 "x": 48,
                 "y": 250,
                 "width": 120,
                 "height": 30,
                 "options": [
-                    {"label": "1. 기숙사로 이동", "target": "dorm"},
-                    {"label": "2. 편의점으로 이동", "target": "store"},
-                    {"label": "3. 교육실로 이동", "target": "classroom"},
+                    {
+                        "label": "1. 교육동 B1층 로비로 이동",
+                        "target": "floor_b1",
+                        "locNum": 3,
+                    },
                 ],
-            }
+            },
         ],
         "npcs": [],
     },
     "store": {
         "name": "store",
         "imagePath": "/static/image/store.png",
+        "width": 1,
+        "height": 1,
         "loc": [(50, 170)],
         "walls": [
             {"x": -10, "y": 10, "width": 20, "height": 190},  # 왼쪽 벽
@@ -80,17 +125,174 @@ maps = {
         ],
         "portals": [
             {
-                "name": "편의점 엘리베이터",
+                "name": "편의점 입구",
                 "x": 20,
                 "y": 170,
                 "width": 60,
                 "height": 40,
                 "options": [
-                    {"label": "1. 카페로 이동", "target": "cafe"},
-                    {"label": "2. 기숙사로 이동", "target": "dorm"},
-                    {"label": "3. 교육실로 이동", "target": "classroom"},
+                    {
+                        "label": "교육동 B1층 로비로 이동",
+                        "target": "floor_b1",
+                        "locNum": 0,
+                    },
                 ],
             }
+        ],
+        "npcs": [
+            {"name": "상점", "x": 120, "y": 150, "imagePath": "/static/image/npc.png"}
+        ],
+    },
+    "floor_b1": {
+        "name": "floor_b1",
+        "imagePath": "/static/image/floor_b1.png",
+        "width": 1,
+        "height": 1,
+        "loc": [
+            (900, 490),
+            (80, 80),
+            (1330, 490),
+            (680, 490),
+            (70, 520),
+        ],  # 편의점 앞 / 좌측 엘리베이터 앞 / 우측 엘리베이터 앞 / 카페 앞 / 기숙사 입출구
+        "walls": [
+            # 추가
+        ],
+        "portals": [
+            {
+                "name": "교육동 B1층 좌측 엘리베이터",
+                "x": 40,
+                "y": 40,
+                "width": 70,
+                "height": 10,
+                "options": [
+                    {"label": "1. 3층 교육장 로비로 이동", "target": "floor"},
+                ],
+            },
+            {
+                "name": "교육동 B1층 우측 엘리베이터",
+                "x": 1290,
+                "y": 455,
+                "width": 70,
+                "height": 10,
+                "options": [
+                    {
+                        "label": "1. 3층 교육장 로비로 이동",
+                        "target": "floor",
+                        "locNum": 0,
+                    },
+                ],
+            },
+            {
+                "name": "교육동 b1 -> 편의점 입구",
+                "x": 875,
+                "y": 455,
+                "width": 70,
+                "height": 10,
+                "options": [
+                    {"label": "1. 편의점으로 이동", "target": "store"},
+                ],
+            },
+            {
+                "name": "교육동 b1 -> 카페 입구",
+                "x": 640,
+                "y": 455,
+                "width": 90,
+                "height": 10,
+                "options": [
+                    {"label": "1. 카페로 이동", "target": "cafe"},
+                ],
+            },
+            {
+                "name": "교육동 b1 -> 기숙사 로비",
+                "x": 0,
+                "y": 495,
+                "width": 10,
+                "height": 60,
+                "options": [
+                    {
+                        "label": "1. 기숙사 로비로 이동",
+                        "target": "dorm_hallway",
+                        "locNum": 1,
+                    },
+                ],
+            },
+        ],
+        "npcs": [
+            {"name": "상점", "x": 120, "y": 150, "imagePath": "/static/image/npc.png"}
+        ],
+    },
+    "floor": {
+        "name": "floor",
+        "imagePath": "/static/image/floor.png",
+        "width": 1.7,
+        "height": 1.7,
+        "loc": [
+            (148, 675),
+            (200, 300),
+            (230, 420),
+            (230, 530),
+        ],  # 아랫쪽 엘리베이터 앞 / 윗쪽 엘리베이터 앞 / 교육실 윗쪽 / 교육실 아랫쪽
+        "walls": [
+            # 추가
+        ],
+        "portals": [
+            {
+                "name": "교육동 3층 아랫쪽 엘리베이터",
+                "x": 120,
+                "y": 740,
+                "width": 50,
+                "height": 20,
+                "options": [
+                    {
+                        "label": "1. 교육동 B1로 이동",
+                        "target": "floor_b1",
+                        "locNum": 2,
+                    },
+                ],
+            },
+            {
+                "name": "교육동 3층 윗쪽 엘리베이터",
+                "x": 195,
+                "y": 70,
+                "width": 10,
+                "height": 40,
+                "options": [
+                    {
+                        "label": "1. 교육동 B1로 이동",
+                        "target": "floor_b1",
+                        "locNum": 1,
+                    },
+                ],
+            },
+            {
+                "name": "윗쪽 교육동 3층 -> 교육장 307호",
+                "x": 190,
+                "y": 420,
+                "width": 10,
+                "height": 15,
+                "options": [
+                    {
+                        "label": "1. 교육장 307호로 이동",
+                        "target": "classroom",
+                        "locNum": 0,
+                    },
+                ],
+            },
+            {
+                "name": "아랫쪽 교육동 3층 -> 교육장 307호",
+                "x": 190,
+                "y": 530,
+                "width": 10,
+                "height": 15,
+                "options": [
+                    {
+                        "label": "1. 교육장 307호로 이동",
+                        "target": "classroom",
+                        "locNum": 1,
+                    },
+                ],
+            },
         ],
         "npcs": [
             {"name": "상점", "x": 120, "y": 150, "imagePath": "/static/image/npc.png"}
@@ -99,6 +301,8 @@ maps = {
     "toilet": {
         "name": "toilet",
         "imagePath": "/static/image/toilet.png",
+        "width": 1,
+        "height": 1,
         "loc": [(70, 60)],
         "walls": [],
         "portals": [
@@ -118,7 +322,9 @@ maps = {
     "classroom": {
         "name": "classroom",
         "imagePath": "/static/image/classroom.png",
-        "loc": [(205, 370)],
+        "width": 1,
+        "height": 1,
+        "loc": [(370, 175), (370, 585)],  # 윗쪽 문 / 아랫쪽 문
         "walls": [
             {"x": -5, "y": 10, "width": 20, "height": 720},  # 왼쪽 벽
             {"x": 430, "y": 10, "width": 20, "height": 720},  # 오른쪽 벽
@@ -162,32 +368,67 @@ maps = {
         ],
         "portals": [
             {
-                "name": "교육실 엘리베이터",
-                "x": 390,
+                "name": "교육실 307호 -> 교육장 윗쪽 로비",
+                "x": 420,
                 "y": 170,
-                "width": 40,
-                "height": 20,
+                "width": 10,
+                "height": 30,
                 "options": [
-                    {"label": "1. 카페로 이동", "target": "cafe"},
-                    {"label": "2. 기숙사로 이동", "target": "dorm"},
-                    {"label": "3. 편의점으로 이동", "target": "store"},
+                    {"label": "1. 교육장 로비로 이동", "target": "floor", "locNum": 2},
                 ],
             },
             {
-                "name": "교육실 엘리베이터",
-                "x": 390,
+                "name": "교육실 307호 -> 교육장 아랫쪽 로비",
+                "x": 420,
                 "y": 580,
-                "width": 40,
-                "height": 20,
+                "width": 10,
+                "height": 30,
                 "options": [
-                    {"label": "1. 카페로 이동", "target": "cafe"},
-                    {"label": "2. 기숙사로 이동", "target": "dorm"},
-                    {"label": "3. 편의점으로 이동", "target": "store"},
+                    {"label": "1. 교육장 로비로 이동", "target": "floor", "locNum": 3},
                 ],
             },
         ],
         "npcs": [],
     },
+    # "floor3": {
+    #     "name": "floorB1",
+    #     "imagePath": "/static/image/floorB1.png",
+    #     "width": 1,
+    #     "height": 1,
+    #     "loc": [(50, 170)],
+    #     "walls": [
+    #         # 추가
+    #     ],
+    #     "portals": [
+    #         {
+    #             "name": "교육동 B1층 좌측 엘리베이터",
+    #             "x": 20,
+    #             "y": 170,
+    #             "width": 60,
+    #             "height": 40,
+    #             "options": [
+    #                 {"label": "1. 카페로 이동", "target": "cafe"},
+    #                 {"label": "2. 기숙사로 이동", "target": "dorm"},
+    #                 {"label": "3. 교육실로 이동", "target": "classroom"},
+    #             ],
+    #         },
+    #         {
+    #             "name": "교육동 B1층 우측 엘리베이터",
+    #             "x": 100,
+    #             "y": 170,
+    #             "width": 60,
+    #             "height": 40,
+    #             "options": [
+    #                 {"label": "1. 카페로 이동", "target": "cafe"},
+    #                 {"label": "2. 기숙사로 이동", "target": "dorm"},
+    #                 {"label": "3. 교육실로 이동", "target": "classroom"},
+    #             ],
+    #         }
+    #     ],
+    #     "npcs": [
+    #         {"name": "상점", "x": 120, "y": 150, "imagePath": "/static/image/npc.png"}
+    #     ],
+    # },
 }
 
 
@@ -196,7 +437,7 @@ quests = [
         "_id": 0,
         "title": "교육의 시작",
         "description": "교육동으로 가서 안내 NPC에게 말을 걸자.",
-        "state": "not_started",
+        "status": "not_started",
         "dialogue": [
             {"npc": "coach", "text": "크래프톤 정글캠퍼스에 오신 것을 환영합니다."},
             {
@@ -209,7 +450,7 @@ quests = [
         "_id": 1,
         "title": "간식이 필요해",
         "description": "편의점에 가서 음료를 사보자.",
-        "state": "not_started",
+        "status": "not_started",
         "dialogue": [
             {
                 "npc": "shopkeeper",
@@ -221,7 +462,7 @@ quests = [
         "_id": 2,
         "title": "카페 투어",
         "description": "카페로 가서 빵을 사보자.",
-        "state": "not_started",
+        "status": "not_started",
         "dialogue": [
             {
                 "npc": "barista",
@@ -232,9 +473,31 @@ quests = [
     {
         "_id": 3,
         "title": "이제 쉬자",
-        "description": "숙소동으로 돌아가서 자신의 방에 입장하라.",
-        "state": "not_started",
+        "description": "숙소동으로 돌아가서 자신의 방에 입장하자.",
+        "status": "not_started",
+        "dialogue": [
+            {
+                "npc": "player",
+                "text": "잠이나 잘까",
+            }
+        ],
     },
+]
+
+sales_items = [
+    {
+        "location": "store",
+        "items": [
+            {"_id": 0, "name": "water", "price": 1000},
+            {"_id": 1, "name": "coca", "price": 1800}
+        ]
+    },
+    {
+        "location": "cafe",
+        "items": [
+            {"_id": 0, "name": "pretzel", "price": 2000}
+        ]
+    }
 ]
 
 def isBlocked(x, y, w, h, map):

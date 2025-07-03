@@ -1,4 +1,4 @@
-let map = {"image": new Image, "name": ""};
+let map = {"image": new Image, "name": "", "width":1, "height":1};
 let walkFront, walkBack, walkRight, walkLeft;
 let walls, npcs, portals;
 
@@ -19,10 +19,19 @@ let debug = false;
 debug = true;
 
 let loop;
+let errCount=0;
+
+let currentLine = 0;
+let dialogues = [];
+let questId = 0;
+
+let selectedLi = -1;
 
 $(document).ready(function () {
   csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   initEventListeners();
+  $(".dialogue").css("display","none");
+  test();
 })
 
 function initEventListeners() {
@@ -68,6 +77,7 @@ function loadResource(target_map="", locNum=-1) {
     data: {},
     success: function (data) {
       nick = data["nick"];
+      $("#nickname").text(nick)
       $.ajax({
         url: `/loading?map=${target_map}&locNum=${locNum}`,
         method: 'GET',
@@ -85,6 +95,8 @@ function loadResource(target_map="", locNum=-1) {
           });
           map["image"].src = data["mapImagePath"];
           map["name"] = data["mapName"];
+          map["width"] = data["width"];
+          map["height"] = data["height"];
 
           console.log(data); // 서버 응답 내용
           initgame();
@@ -149,12 +161,13 @@ function initgame() {
         'X-CSRFToken': csrfToken
       },
       success: function (data) {
+        // console.log(data["chat"])
         function G2L (x, y) {
           return [canvas.width / 2 - (data["game"][nick]["x"] - x), canvas.height / 2 - (data["game"][nick]["y"] - y)]
         }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         loc = G2L(0,0)
-        ctx.drawImage(map["image"], loc[0], loc[1]);
+        ctx.drawImage(map["image"], loc[0], loc[1], map["image"].width * map["width"], map["image"].height * map["height"]);
 
         npcs.forEach((npc, i) => {
           loc = G2L(npc["x"], npc["y"])
@@ -196,6 +209,13 @@ function initgame() {
           }
         });
 
+        $('#money').text(`${data["game"][nick]["money"]}원`)
+
+        $(".chat_list").html("")
+        data["chat"].forEach((line) => {
+          $(".chat_list").append(`<li>${line["nick"]}: ${line["msg"]}</li>`)
+        })
+
         if (debug) {
           //포탈 영역 시각화
           portals.forEach((zone) => {
@@ -212,6 +232,7 @@ function initgame() {
             loc = G2L(wall["x"], wall["y"])
             ctx.strokeRect(loc[0], loc[1], wall["width"], wall["height"]);
           });
+          console.log("플레이어 위치", data["game"][nick]["x"], data["game"][nick]["y"])
         }
 
         if (data["game"][nick]["portal"] != null) {
@@ -246,7 +267,134 @@ function initgame() {
           }
         }
       },
+      error: function (err) {
+        errCount++;
+        if (errCount > 10) {
+          clearInterval(loop)
+        }
+      }
     });
 
-  }, 50);
+  }, 50); 
+}
+
+function quest_start(questId) {
+  $.ajax({
+    type: "POST",
+    url: "/quest",
+    data: { quest_id: questId },
+    headers: {
+      'Accept': 'application/json',
+      'X-CSRFToken': csrfToken
+    },
+    success: function (response) {
+      if (response["result"] === "success") {
+        console.log("quest start ");
+        console.log(response);
+        const { title, description } = response;
+        document.getElementById("quest-title").innerHTML = title;
+        document.getElementById("quest-content").innerHTML = description;
+
+      }
+    }
+  });
+};
+
+function quest_clear(questId) {
+  document.getElementById("dialogue-content").innerHTML = " ";
+  $(".dialogue").slideToggle(500);
+  questId += 1;
+  quest_start(questId); // 다음퀘 실행
+}
+
+function dialogue(id) {
+  $.ajax({
+    type: "POST",
+    url: "/quest",
+    data: { quest_id: id },
+    headers: {
+      'Accept': 'application/json',
+      'X-CSRFToken': csrfToken
+    },
+    success: function (response) {
+      if (response["result"] === "success") {
+        dialogues = response.dialogues;
+        questId = id;
+        currentLine = 0;
+        $(".dialogue").slideToggle(500)
+        dialogue_continue();
+
+      }
+    }
+  });
+}
+
+function dialogue_continue() {
+  if (currentLine < dialogues.length) {
+    document.getElementById("dialogue-content").innerHTML = dialogues[currentLine]["text"];
+    currentLine++;
+  }
+  else {
+    quest_clear(questId);
+  }
+}
+function test() {
+  document.getElementById("quest-btn0").addEventListener('click', function () {
+    dialogue(0);
+  });
+  document.getElementById("quest-btn1").addEventListener('click', function () {
+    dialogue(1);
+  });
+  document.getElementById("quest-btn2").addEventListener('click', function () {
+    dialogue(2);
+  });
+  document.getElementById("quest-btn3").addEventListener('click', function () {
+    dialogue(3);
+  });
+  // quest_start(0);
+  document.getElementById("continue-btn").addEventListener("click", dialogue_continue);
+  document.getElementById("loc-store").addEventListener('click', function () {
+    open_buy_menu("store");
+  });
+  document.getElementById("loc-cafe").addEventListener('click', function () {
+    open_buy_menu("cafe");
+  });
+}
+
+function open_buy_menu(location) {
+  console.log("store");
+  $("#item-list").html("");
+  $.ajax({
+    type: "POST",
+    url: "/buy",
+    data: { loc: location },
+    headers: {
+      'Accept': 'application/json',
+      'X-CSRFToken': csrfToken
+    },
+    success: function (response) {
+      if (response["result"] === "success") {
+        console.log(response);
+        items = response.items;
+        items.forEach(item => {
+          item_name = item["name"];
+          item_price = item["price"];
+          temp_html = `<ul><li>${item_name}</li><li>${item_price}원</li></ul>`;
+          $("#item-list").append(temp_html);
+          $("li").on("click", function(){
+            $("li").removeClass("selected");
+            $(this).addClass("selected");
+            selectedLi = $(this).index();
+          });
+          // 버튼 누르면 구매
+        });
+      }
+    }
+  });
+}
+// 유저db에 저장? 돈-=
+function buy_item(item_id) {
+  if (selectedLi != -1) {
+
+  }
 }
