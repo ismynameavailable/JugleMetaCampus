@@ -17,7 +17,6 @@ let P_HEIGHT = 50;
 let csrfToken = "";
 
 let debug = false;
-debug = true;
 
 let loop;
 let errCount=0;
@@ -48,7 +47,7 @@ $(document).ready(function () {
   $(".dialogue").css("display","none");
   $(".store").css("display","none");
   // test();
-  // quest_start(0);
+  quest_start(0);
 })
 
 function initEventListeners() {
